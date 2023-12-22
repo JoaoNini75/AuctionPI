@@ -1,6 +1,5 @@
-package com.joaonini75.auctionpi.Auction;
+package com.joaonini75.auctionpi.auctions;
 
-import com.joaonini75.auctionpi.Bid.Bid;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

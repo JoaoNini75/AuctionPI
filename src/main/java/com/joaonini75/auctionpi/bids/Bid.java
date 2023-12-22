@@ -1,4 +1,4 @@
-package com.joaonini75.auctionpi.Bid;
+package com.joaonini75.auctionpi.bids;
 
 import jakarta.persistence.*;
 
