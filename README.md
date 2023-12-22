@@ -10,9 +10,9 @@ The API has (or will have) the following entities:
 - Questions/Replies
 
 Besides this, the service provides endpoints for the following queries:
-• List of bids of a given auction;
-• List of bids of a given user;
-• List of auctions about to close;
-• List of auctions that a given user created;
-• List of auctions that a given user bid on;
-• List of questions of a given auction.
+- List of bids of a given auction;
+- List of bids of a given user;
+- List of auctions about to close;
+- List of auctions that a given user created;
+- List of auctions that a given user bid on;
+- List of questions of a given auction.
