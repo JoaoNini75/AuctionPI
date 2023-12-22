@@ -20,11 +20,10 @@ public class Auction {
             generator = "auction_sequence"
     )
     private Long id;
-    private Long userId;
+    private Long userId, winnerBidId;
     private String title, description, photoId;
     private float minPrice;
     private LocalDateTime startTime, endTime;
-    private Bid winner;
     private AuctionStatus status;
 
     public Auction() {
@@ -32,19 +31,19 @@ public class Auction {
     }
 
     public Auction(Long userId, String title, String description, String photoId,
-                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Bid winner, AuctionStatus status) {
+                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Long winnerBidId, AuctionStatus status) {
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.photoId = photoId;
         this.minPrice = minPrice;
         this.endTime = endTime;
-        this.winner = winner;
+        this.winnerBidId = winnerBidId;
         this.status = status;
     }
 
     public Auction(Long id, Long userId, String title, String description, String photoId,
-                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Bid winner, AuctionStatus status) {
+                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Long winnerBidId, AuctionStatus status) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -52,7 +51,7 @@ public class Auction {
         this.photoId = photoId;
         this.minPrice = minPrice;
         this.endTime = endTime;
-        this.winner = winner;
+        this.winnerBidId = winnerBidId;
         this.status = status;
     }
 
@@ -67,7 +66,7 @@ public class Auction {
                 ", minPrice=" + minPrice +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", winner=" + winner +
+                ", winnerBidId=" + winnerBidId +
                 ", status=" + status +
                 '}';
     }
@@ -136,12 +135,12 @@ public class Auction {
         this.endTime = endTime;
     }
 
-    public Bid getWinner() {
-        return winner;
+    public Long getWinnerBidId() {
+        return winnerBidId;
     }
 
-    public void setWinner(Bid winner) {
-        this.winner = winner;
+    public void setWinnerBidId(Long winnerBidId) {
+        this.winnerBidId = winnerBidId;
     }
 
     public AuctionStatus getStatus() {
