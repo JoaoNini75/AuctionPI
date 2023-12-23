@@ -72,11 +72,11 @@ public class UserService {
     }
 
     private boolean isEmailValid(String email) {
-        if (email == null || email.length() == 0 || email.trim().equals("") || !email.contains("@"))
+        if (email == null || email.trim().equals("") || !email.contains("@"))
             return false;
 
         Optional<User> userOpt = users.findUserByEmail(email);
-        return userOpt.isPresent();
+        return userOpt.isEmpty();
     }
 
     private User processUpdates(User oldUser, String newName, String newEmail) {

@@ -2,8 +2,6 @@ package com.joaonini75.auctionpi.auctions;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table
 public class Auction {
@@ -20,9 +18,8 @@ public class Auction {
     )
     private Long id;
     private Long userId, winnerBidId;
-    private String title, description, photoId;
+    private String title, description, photoId, startTime, endTime, deleteBidsLimitTime;
     private float minPrice;
-    private LocalDateTime startTime, endTime;
     private AuctionStatus status;
 
     public Auction() {
@@ -30,26 +27,32 @@ public class Auction {
     }
 
     public Auction(Long userId, String title, String description, String photoId,
-                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Long winnerBidId, AuctionStatus status) {
+                   float minPrice, String startTime, String endTime,
+                   String deleteBidsLimitTime, Long winnerBidId, AuctionStatus status) {
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.photoId = photoId;
         this.minPrice = minPrice;
+        this.startTime = startTime;
         this.endTime = endTime;
+        this.deleteBidsLimitTime = deleteBidsLimitTime;
         this.winnerBidId = winnerBidId;
         this.status = status;
     }
 
-    public Auction(Long id, Long userId, String title, String description, String photoId,
-                   float minPrice, LocalDateTime startTime, LocalDateTime endTime, Long winnerBidId, AuctionStatus status) {
+    public Auction(Long id, Long userId, String title, String description,
+                   String photoId, float minPrice, String startTime, String endTime,
+                   String deleteBidsLimitTime, Long winnerBidId, AuctionStatus status) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.photoId = photoId;
         this.minPrice = minPrice;
+        this.startTime = startTime;
         this.endTime = endTime;
+        this.deleteBidsLimitTime = deleteBidsLimitTime;
         this.winnerBidId = winnerBidId;
         this.status = status;
     }
@@ -65,16 +68,25 @@ public class Auction {
                 ", minPrice=" + minPrice +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", deleteBidsLimitTime=" + deleteBidsLimitTime +
                 ", winnerBidId=" + winnerBidId +
                 ", status=" + status +
                 '}';
     }
 
-    public LocalDateTime getStartTime() {
+    public String getDeleteBidsLimitTime() {
+        return deleteBidsLimitTime;
+    }
+
+    public void setDeleteBidsLimitTime(String deleteBidsLimitTime) {
+        this.deleteBidsLimitTime = deleteBidsLimitTime;
+    }
+
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -126,11 +138,11 @@ public class Auction {
         this.minPrice = minPrice;
     }
 
-    public LocalDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

@@ -13,5 +13,10 @@ public class ErrorMessages {
     public static final String BLOB_NOT_EXISTS = "The blob with the id %s does not exist.";
     public static final String ERROR_UPLOADING_BLOB = "An error happened while uploading the blob.";
 
-
+    // BidService
+    public static final String BID_NOT_EXISTS = "The bid with the id %s does not exist.";
+    public static final String INVALID_VALUE = "The value of your bid is less than the minimum price" +
+            " set by the auction owner.";
+    public static final String TIME_TO_DELETE_BID_EXCEEDED = "You can no longer delete bids on this " +
+            "auction, as the owner defined that the limit was until %s";
 }

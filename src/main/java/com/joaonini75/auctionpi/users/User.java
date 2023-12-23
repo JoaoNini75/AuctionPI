@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
 
-@Entity(name = "userTable")
-@Table(name = "userTable")
+@Entity(name = "user_table")
+@Table(name = "user_table")
 public class User {
 
     @Id
@@ -56,7 +56,6 @@ public class User {
                 ", name='" + name + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", photoId='" + photoId + '\'' +
                 ", dob=" + dob +
                 ", age=" + age +

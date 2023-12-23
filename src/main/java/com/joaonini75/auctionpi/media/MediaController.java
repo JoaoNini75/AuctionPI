@@ -1,7 +1,5 @@
 package com.joaonini75.auctionpi.media;
 
-import com.joaonini75.auctionpi.users.User;
-import com.joaonini75.auctionpi.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
