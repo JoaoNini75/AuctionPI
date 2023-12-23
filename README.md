@@ -9,7 +9,8 @@ The API has (or will have) the following entities:
 - Bids
 - Questions/Replies
 
-Besides this, the service provides endpoints for the following queries:
+
+Besides the CRUD operations for all of the entities, the service provides endpoints for the following queries:
 - List of bids of a given auction;
 - List of bids of a given user;
 - List of auctions about to close;
