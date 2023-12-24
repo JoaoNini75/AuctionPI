@@ -3,6 +3,10 @@ package com.joaonini75.auctionpi.auctions;
 import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -66,12 +70,10 @@ public class AuctionService {
     @Transactional
     // parameters that can change: title, description, photoId
     // possible in the future? : endTime, deleteBidsLimitTime
-    // TODO HOW TO CLOSE AUCTION?
     public Auction updateAuction(Auction auction) {
         Auction oldAuction = auctionExists(auctions, auction.getId());
 
         // TODO NOT WORKING WHY?
-
         //  if (!auction.getOpenBool())
         //      throw new IllegalStateException(CANNOT_UPDATE_CLOSED_AUCTION);
 

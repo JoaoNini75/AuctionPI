@@ -5,8 +5,12 @@ import com.joaonini75.auctionpi.auctions.AuctionRepository;
 import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
+import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -40,10 +44,15 @@ public class BidService {
     public Bid createBid(Bid bid) {
         userExists(users, bid.getUserId());
         Auction auction = auctionExists(auctions, bid.getAuctionId());
-        Bid winnerBid = bidExists(auction.getWinnerBidId());
+        Optional<Bid> winnerBidOpt = bids.findById(auction.getWinnerBidId());
 
-        if (bid.getValue() < auction.getMinPrice() || bid.getValue() < winnerBid.getValue())
-            throw new IllegalStateException(String.format(INVALID_VALUE, winnerBid.getValue()));
+        if (bid.getValue() < auction.getMinPrice() || (winnerBidOpt.isPresent() &&
+                bid.getValue() < winnerBidOpt.get().getValue()))
+            throw new IllegalStateException(String.format(INVALID_VALUE,
+                    winnerBidOpt.get().getValue()));
+
+        if (auction.getWinnerBidId() == null)
+            scheduleCloseAuction(auction.getId(), auction.getEndTime());
 
         bid.setCreationTime(nowLocalDateTimeToString());
         auction.setWinnerBidId(bid.getId());
@@ -83,12 +92,36 @@ public class BidService {
         return ldt.format(formatter);
     }
 
+    private Instant stringToInstant(String time) {
+        return null; // TODO
+    }
+
     public static boolean isDateFormatValid(String date) {
         try {
             DateTimeFormatter.ofPattern(DATE_TIME_PATTERN).parse(date);
             return true;
         } catch (DateTimeParseException e) {
             return false;
+        }
+    }
+
+    private void scheduleCloseAuction(Long id, String time) {
+        TaskScheduler scheduler = new ConcurrentTaskScheduler();
+        Instant instant = stringToInstant(time);
+        scheduler.schedule(new RunnableScheduler(id), instant);
+    }
+
+    class RunnableScheduler implements Runnable {
+        private final Long id;
+
+        private RunnableScheduler(Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void run() {
+            Auction auction = auctionExists(auctions, this.id);
+            auctions.delete(auction);
         }
     }
 }
