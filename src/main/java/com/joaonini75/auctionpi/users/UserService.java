@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public User getUser(Long id) {
-        return userExists(id);
+        return userExists(users, id);
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(User newUser) {
-        User oldUser = userExists(newUser.getId());
+        User oldUser = userExists(users, newUser.getId());
 
         User finalUser = processUpdates(oldUser,
                 newUser.getName(), newUser.getEmail());
@@ -58,13 +58,13 @@ public class UserService {
 
     @Transactional
     public User deleteUser(Long id) {
-        User user = userExists(id);
+        User user = userExists(users, id);
         users.delete(user);
         return user;
     }
 
 
-    private User userExists(Long id) {
+    public static User userExists(UserRepository users, Long id) {
         Optional<User> userOpt = users.findById(id);
         if (userOpt.isEmpty())
             throw new IllegalStateException(String.format(USER_NOT_EXISTS, id));

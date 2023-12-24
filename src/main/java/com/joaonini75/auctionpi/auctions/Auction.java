@@ -18,9 +18,10 @@ public class Auction {
     )
     private Long id;
     private Long userId, winnerBidId;
-    private String title, description, photoId, startTime, endTime, deleteBidsLimitTime;
+    private String title, description, photoId,
+            startTime, endTime, deleteBidsLimitTime;
     private float minPrice;
-    private AuctionStatus status;
+    private boolean openBool;
 
     public Auction() {
 
@@ -28,7 +29,7 @@ public class Auction {
 
     public Auction(Long userId, String title, String description, String photoId,
                    float minPrice, String startTime, String endTime,
-                   String deleteBidsLimitTime, Long winnerBidId, AuctionStatus status) {
+                   String deleteBidsLimitTime, Long winnerBidId, boolean openBool) {
         this.userId = userId;
         this.title = title;
         this.description = description;
@@ -38,12 +39,12 @@ public class Auction {
         this.endTime = endTime;
         this.deleteBidsLimitTime = deleteBidsLimitTime;
         this.winnerBidId = winnerBidId;
-        this.status = status;
+        this.openBool = openBool;
     }
 
     public Auction(Long id, Long userId, String title, String description,
                    String photoId, float minPrice, String startTime, String endTime,
-                   String deleteBidsLimitTime, Long winnerBidId, AuctionStatus status) {
+                   String deleteBidsLimitTime, Long winnerBidId, boolean openBool) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -54,7 +55,7 @@ public class Auction {
         this.endTime = endTime;
         this.deleteBidsLimitTime = deleteBidsLimitTime;
         this.winnerBidId = winnerBidId;
-        this.status = status;
+        this.openBool = openBool;
     }
 
     @Override
@@ -70,7 +71,7 @@ public class Auction {
                 ", endTime=" + endTime +
                 ", deleteBidsLimitTime=" + deleteBidsLimitTime +
                 ", winnerBidId=" + winnerBidId +
-                ", status=" + status +
+                ", openBool=" + openBool +
                 '}';
     }
 
@@ -154,11 +155,11 @@ public class Auction {
         this.winnerBidId = winnerBidId;
     }
 
-    public AuctionStatus getStatus() {
-        return status;
+    public boolean getOpenBool() {
+        return openBool;
     }
 
-    public void setStatus(AuctionStatus status) {
-        this.status = status;
+    public void setOpenBool(boolean openBool) {
+        this.openBool = openBool;
     }
 }

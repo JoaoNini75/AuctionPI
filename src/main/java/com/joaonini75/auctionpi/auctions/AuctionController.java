@@ -29,17 +29,13 @@ public class AuctionController {
         return auctionService.createAuction(auction);
     }
 
-    @DeleteMapping(path = "{id}")
-    public Auction deleteAuction(@PathVariable("id") Long id) {
-        return auctionService.deleteAuction(id);
-    }
-
     @PutMapping
     public Auction updateAuction(@RequestBody Auction auction) {
         return auctionService.updateAuction(auction);
     }
 
-    /*// List of bids of a given auction
+    /* TODO
+    // List of bids of a given auction
     @GetMapping(path = "{id}/bids")
     public List<Bid> listAuctionBids(@PathVariable("id") Long id) {
         return auctionService.listAuctionBids(id);
