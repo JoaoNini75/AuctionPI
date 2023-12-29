@@ -1,18 +1,18 @@
 package com.joaonini75.auctionpi.auctions;
 
+import com.joaonini75.auctionpi.bids.Bid;
+import com.joaonini75.auctionpi.bids.BidRepository;
 import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
-import static com.joaonini75.auctionpi.bids.BidService.isDateFormatValid;
-import static com.joaonini75.auctionpi.bids.BidService.nowLocalDateTimeToString;
+import static com.joaonini75.auctionpi.bids.BidService.*;
 import static com.joaonini75.auctionpi.users.UserService.userExists;
 import static com.joaonini75.auctionpi.utils.ErrorMessages.*;
 
@@ -21,11 +21,13 @@ public class AuctionService {
 
     private final UserRepository users;
     private final AuctionRepository auctions;
+    private final BidRepository bids;
 
     @Autowired
-    public AuctionService(UserRepository users, AuctionRepository auctions) {
+    public AuctionService(UserRepository users, AuctionRepository auctions, BidRepository bids) {
         this.users = users;
         this.auctions = auctions;
+        this.bids = bids;
     }
 
     public Auction getAuction(Long id) {
@@ -51,6 +53,7 @@ public class AuctionService {
         if (!isDateFormatValid(limitBidsTime) || !isDateFormatValid(endTime))
             throw new IllegalStateException(INVALID_DATES_FORMAT);
 
+        // TODO the following two checks are not working
         if (endTime.compareTo(now) < 0)
             throw new IllegalStateException(INVALID_AUCTION_END_TIME);
 
@@ -96,11 +99,30 @@ public class AuctionService {
         return auctions.save(oldAuction);
     }
 
+    public List<Bid> listAuctionBids(Long id) {
+        auctionExists(auctions, id);
+        Optional<List<Bid>> auctionBids = bids.listAuctionBids(id);
+        return auctionBids.orElse(null);
+    }
+
+    // about to close = 1h TODO: always returning empty list
+    public List<Auction> listClosingAuctions() {
+        Optional<List<Auction>> closingAuctions = auctions.listClosingAuctions(limitDate());
+        return closingAuctions.orElse(null);
+    }
+
+
 
     public static Auction auctionExists(AuctionRepository auctions, Long id) {
         Optional<Auction> auctionOpt = auctions.findById(id);
         if (auctionOpt.isEmpty())
             throw new IllegalStateException(String.format(AUCTION_NOT_EXISTS, id));
         return auctionOpt.get();
+    }
+
+    private String limitDate() {
+        LocalDateTime ldt = LocalDateTime.now().plusMinutes(60);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+        return ldt.format(formatter);
     }
 }

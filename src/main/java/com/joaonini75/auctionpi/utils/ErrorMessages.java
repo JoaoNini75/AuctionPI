@@ -30,9 +30,12 @@ public class ErrorMessages {
 
     // BidService
     public static final String BID_NOT_EXISTS = "The bid with the id %s does not exist.";
-    public static final String INVALID_VALUE = "The value of your bid must be higher than the auction minimum" +
-            " price and higher than the winning bid (%f).";
+    public static final String LOWER_THAN_AUCTION_MIN = "The value of your bid must be higher than the" +
+            " auction minimum (%f).";
+    public static final String LOWER_THAN_WINNING_BID = "The value of your bid must be higher than the" +
+            " winning bid (%f).";
     public static final String TIME_TO_DELETE_BID_EXCEEDED = "You can no longer delete bids on this " +
             "auction, as the owner defined that the limit was until %s";
     public static final String AUCTION_NOT_EXISTS = "The auction with the given id (%s) does not exist.";
+    public static final String SAME_USER_BIDDING = "You cannot make a bid for your own auctions.";
 }

@@ -34,7 +34,7 @@ public class AuctionController {
         return auctionService.updateAuction(auction);
     }
 
-    /* TODO
+
     // List of bids of a given auction
     @GetMapping(path = "{id}/bids")
     public List<Bid> listAuctionBids(@PathVariable("id") Long id) {
@@ -45,6 +45,6 @@ public class AuctionController {
     @GetMapping(path = "/closing")
     public List<Auction> listClosingAuctions() {
         return auctionService.listClosingAuctions();
-    }*/
+    }
 
 }
