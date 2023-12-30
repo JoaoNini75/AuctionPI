@@ -6,16 +6,22 @@ import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static com.joaonini75.auctionpi.auctions.AuctionService.auctionExists;
 import static com.joaonini75.auctionpi.users.UserService.userExists;
@@ -29,12 +35,39 @@ public class BidService {
     private final BidRepository bids;
     private final UserRepository users;
     private final AuctionRepository auctions;
+    private TaskScheduler scheduler;
 
     @Autowired
     public BidService(BidRepository bids, UserRepository users, AuctionRepository auctions) {
         this.bids = bids;
         this.users = users;
         this.auctions = auctions;
+    }
+
+    @Async
+    public void scheduleCloseAuction(Auction auction, String dateStr) {
+        ScheduledExecutorService localExecutor =
+                Executors.newSingleThreadScheduledExecutor();
+        scheduler = new ConcurrentTaskScheduler(localExecutor);
+
+        scheduler.schedule(closeAuctionRunnable(auction), stringToInstant(dateStr));
+    }
+
+    @Scheduled(cron = "0 */10 * * * *") // 10 minutes interval
+    void ensuringAuctionsAreClosed() {
+        List<Auction> list = auctions.findAll();
+        String now = nowLocalDateTimeToString();
+        int cleanCounter = 0;
+
+        for (Auction a : list) {
+            if (a.getEndTime().compareTo(now) <= 0 && a.getOpenBool()) {
+                a.setOpenBool(false);
+                auctions.save(a);
+                cleanCounter++;
+            }
+        }
+
+        System.out.println("ensuringAuctionsAreClosed done: " +  cleanCounter);
     }
 
     public Bid getBid(Long id) {
@@ -45,6 +78,9 @@ public class BidService {
     public Bid createBid(Bid bid) {
         userExists(users, bid.getUserId());
         Auction auction = auctionExists(auctions, bid.getAuctionId());
+
+        shouldAuctionBeClosed(auctions, auction, CANNOT_BID_CLOSED_AUCTION);
+
         Long auctionWinnerBidId = auction.getWinnerBidId();
 
         if (auctionWinnerBidId != null) {
@@ -52,7 +88,9 @@ public class BidService {
             if (winnerBidOpt.isPresent() && bid.getValue() <= winnerBidOpt.get().getValue())
                 throw new IllegalStateException(String.format(LOWER_THAN_WINNING_BID,
                         winnerBidOpt.get().getValue()));
-        } else if (bid.getValue() < auction.getMinPrice())
+        }
+
+        if (bid.getValue() < auction.getMinPrice())
             throw new IllegalStateException(String.format(LOWER_THAN_AUCTION_MIN,
                     auction.getMinPrice()));
 
@@ -60,7 +98,7 @@ public class BidService {
             throw new IllegalStateException(SAME_USER_BIDDING);
 
         if (auctionWinnerBidId == null)
-            scheduleCloseAuction(auction.getId(), auction.getEndTime());
+            scheduleCloseAuction(auction, auction.getEndTime());
 
         bid.setCreationTime(nowLocalDateTimeToString());
 
@@ -78,7 +116,7 @@ public class BidService {
         String limitTime = auction.getDeleteBidsLimitTime();
         String now = nowLocalDateTimeToString();
 
-        if (now.compareTo(limitTime) < 0)
+        if (now.compareTo(limitTime) > 0)
             throw new IllegalStateException(String.format(TIME_TO_DELETE_BID_EXCEEDED,
                     limitTime));
 
@@ -89,6 +127,8 @@ public class BidService {
         // bids.delete(bid);
         return bid;
     }
+
+
 
     private Bid bidExists(Long id) {
         Optional<Bid> bidOpt = bids.findById(id);
@@ -112,29 +152,34 @@ public class BidService {
         }
     }
 
-    private Instant stringToInstant(String stringDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN/*, Locale.US*/);
-        LocalDateTime localDateTime = LocalDateTime.parse(stringDate, formatter);
-        return localDateTime.atZone(ZoneId.of("Europe/London")).toInstant();
-    }
+    public static void shouldAuctionBeClosed(AuctionRepository auctions, Auction auction,
+                                             String errorMessage) {
+        if (auction.getEndTime().compareTo(nowLocalDateTimeToString()) < 0) {
+            if (auction.getOpenBool()) {
+                auction.setOpenBool(false);
+                auctions.save(auction);
+            }
 
-    private void scheduleCloseAuction(Long id, String time) {
-        TaskScheduler scheduler = new ConcurrentTaskScheduler();
-        Instant instant = stringToInstant(time);
-        scheduler.schedule(new RunnableScheduler(id), instant);
-    }
-
-    class RunnableScheduler implements Runnable {
-        private final Long id;
-
-        private RunnableScheduler(Long id) {
-            this.id = id;
+            throw new IllegalStateException(errorMessage);
         }
+    }
 
-        @Override
-        public void run() {
-            Auction auction = auctionExists(auctions, this.id);
+    private Runnable closeAuctionRunnable(Auction auction) {
+        return () -> {
             auction.setOpenBool(false);
-        }
+            auctions.save(auction);
+        };
     }
+
+    private Instant stringToInstant(String dateStr) {
+        Date date;
+        try {
+            date = new SimpleDateFormat(DATE_TIME_PATTERN).parse(dateStr);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        return date.toInstant();
+    }
+
 }

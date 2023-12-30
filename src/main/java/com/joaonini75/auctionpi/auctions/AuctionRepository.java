@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    @Query("SELECT a FROM Auction a WHERE a.endTime < ?1")
-    Optional<List<Auction>> listClosingAuctions(String limitDate);
+    @Query("SELECT a FROM Auction a WHERE a.endTime > ?1 AND a.endTime < ?2")
+    Optional<List<Auction>> listClosingAuctions(String lowerLimit, String upperLimit);
 }

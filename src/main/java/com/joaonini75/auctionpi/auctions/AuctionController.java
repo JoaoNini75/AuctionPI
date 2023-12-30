@@ -34,7 +34,6 @@ public class AuctionController {
         return auctionService.updateAuction(auction);
     }
 
-
     // List of bids of a given auction
     @GetMapping(path = "{id}/bids")
     public List<Bid> listAuctionBids(@PathVariable("id") Long id) {

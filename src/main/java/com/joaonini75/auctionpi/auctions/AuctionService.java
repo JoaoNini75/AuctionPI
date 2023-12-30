@@ -53,7 +53,6 @@ public class AuctionService {
         if (!isDateFormatValid(limitBidsTime) || !isDateFormatValid(endTime))
             throw new IllegalStateException(INVALID_DATES_FORMAT);
 
-        // TODO the following two checks are not working
         if (endTime.compareTo(now) < 0)
             throw new IllegalStateException(INVALID_AUCTION_END_TIME);
 
@@ -70,15 +69,13 @@ public class AuctionService {
         return auctions.save(auction);
     }
 
-    @Transactional
     // parameters that can change: title, description, photoId
     // possible in the future? : endTime, deleteBidsLimitTime
+    @Transactional
     public Auction updateAuction(Auction auction) {
         Auction oldAuction = auctionExists(auctions, auction.getId());
 
-        // TODO NOT WORKING WHY?
-        //  if (!auction.getOpenBool())
-        //      throw new IllegalStateException(CANNOT_UPDATE_CLOSED_AUCTION);
+        shouldAuctionBeClosed(auctions, auction, CANNOT_UPDATE_CLOSED_AUCTION);
 
         String title = auction.getTitle();
         if (title == null || title.trim().equals(""))
@@ -105,9 +102,11 @@ public class AuctionService {
         return auctionBids.orElse(null);
     }
 
-    // about to close = 1h TODO: always returning empty list
+    // about to close = 1h
     public List<Auction> listClosingAuctions() {
-        Optional<List<Auction>> closingAuctions = auctions.listClosingAuctions(limitDate());
+        Optional<List<Auction>> closingAuctions = auctions.listClosingAuctions(
+                nowLocalDateTimeToString(),
+                limitDate());
         return closingAuctions.orElse(null);
     }
 

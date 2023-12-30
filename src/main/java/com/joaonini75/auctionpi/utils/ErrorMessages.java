@@ -18,17 +18,19 @@ public class ErrorMessages {
     // AuctionService
     public static final String TITLE_CANNOT_BE_EMPTY = "The title of the auction can not be empty.";
     public static final String DESCRIPTION_CANNOT_BE_EMPTY = "The description of the auction can not be empty.";
-    public static final String INVALID_AUCTION_END_TIME = "The auction close time is not valid.";
+    public static final String INVALID_AUCTION_END_TIME = "The auction must close after the current moment.";
     public static final String INVALID_LIMIT_BID_TIME = "The auction time limit for deleting bids should" +
             " be after the current moment and before the auction close time.";
     public static final String INVALID_AUCTION_MIN_PRICE = "The auction minimum price can not be negative";
     public static final String NO_CHANGES_MADE = "No changes were made to the auction.";
     public static final String CANNOT_UPDATE_CLOSED_AUCTION = "It is not possible to update properties " +
             "regarding a auction that has already closed.";
-    public static final String INVALID_DATES_FORMAT = "One or more dates do not respect the specified format "
+    public static final String INVALID_DATES_FORMAT = "At least one date does not respect the specified format "
             + "(" + DATE_TIME_PATTERN + ")";
 
     // BidService
+    public static final String CANNOT_BID_CLOSED_AUCTION = "The auction has already closed, therefore you" +
+            " cannot create a bid for it.";
     public static final String BID_NOT_EXISTS = "The bid with the id %s does not exist.";
     public static final String LOWER_THAN_AUCTION_MIN = "The value of your bid must be higher than the" +
             " auction minimum (%f).";
