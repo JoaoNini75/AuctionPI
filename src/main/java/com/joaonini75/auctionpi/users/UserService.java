@@ -1,5 +1,9 @@
 package com.joaonini75.auctionpi.users;
 
+import com.joaonini75.auctionpi.auctions.Auction;
+import com.joaonini75.auctionpi.auctions.AuctionRepository;
+import com.joaonini75.auctionpi.bids.Bid;
+import com.joaonini75.auctionpi.bids.BidRepository;
 import com.joaonini75.auctionpi.utils.Hash;
 import static com.joaonini75.auctionpi.utils.ErrorMessages.*;
 
@@ -14,10 +18,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository users;
+    private final BidRepository bids;
+    private final AuctionRepository auctions;
 
     @Autowired
-    public UserService(UserRepository users) {
+    public UserService(UserRepository users, BidRepository bids, AuctionRepository auctions) {
         this.users = users;
+        this.bids = bids;
+        this.auctions = auctions;
     }
 
     public List<User> listUsers() {
@@ -62,6 +70,25 @@ public class UserService {
         users.delete(user);
         return user;
     }
+
+    public List<Bid> listUserBids(Long id) {
+        userExists(users, id);
+        Optional<List<Bid>> userBids = bids.listUserBids(id);
+        return userBids.orElse(null);
+    }
+
+    public List<Auction> listUserAuctions(Long id) {
+        userExists(users, id);
+        Optional<List<Auction>> userAuctions = auctions.listUserAuctions(id);
+        return userAuctions.orElse(null);
+    }
+
+    public List<Auction> listAuctionsWithUserBids(Long id) {
+        userExists(users, id);
+        Optional<List<Auction>> auctionsWithUserBids = bids.listAuctionsWithUserBids(id);
+        return auctionsWithUserBids.orElse(null);
+    }
+
 
 
     public static User userExists(UserRepository users, Long id) {
