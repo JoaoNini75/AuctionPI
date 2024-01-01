@@ -10,6 +10,7 @@ The API is based on the following entities:
 - Questions/Replies
 
 
+
 Besides the CRUD operations for all of the entities, the service provides endpoints for the following queries:
 - List of bids of a given auction;
 - List of bids of a given user;
@@ -17,6 +18,7 @@ Besides the CRUD operations for all of the entities, the service provides endpoi
 - List of auctions that a given user created;
 - List of auctions that a given user bid on;
 - List of questions of a given auction.
+
 
 
 Other important features/implementation details (will) include:
