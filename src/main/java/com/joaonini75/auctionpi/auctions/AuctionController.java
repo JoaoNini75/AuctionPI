@@ -1,8 +1,8 @@
 package com.joaonini75.auctionpi.auctions;
 
 import com.joaonini75.auctionpi.bids.Bid;
-import com.joaonini75.auctionpi.bids.BidService;
-import com.joaonini75.auctionpi.users.User;
+import com.joaonini75.auctionpi.questions.Question;
+import com.joaonini75.auctionpi.questions.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +13,12 @@ import java.util.List;
 public class AuctionController {
 
     private final AuctionService auctionService;
+    private final QuestionService questionService;
 
     @Autowired
-    public AuctionController(AuctionService auctionService) {
+    public AuctionController(AuctionService auctionService, QuestionService questionService) {
         this.auctionService = auctionService;
+        this.questionService = questionService;
     }
 
     @GetMapping(path = "{id}")
@@ -46,4 +48,9 @@ public class AuctionController {
         return auctionService.listClosingAuctions();
     }
 
+    // List of questions of a given auction
+    @GetMapping(path = "{id}/questions")
+    public List<Question> listAuctionQuestions(@PathVariable("id") Long id) {
+        return questionService.listAuctionQuestions(id);
+    }
 }

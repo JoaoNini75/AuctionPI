@@ -17,10 +17,12 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     @Query("SELECT b FROM Bid b WHERE b.userId = ?1")
     Optional<List<Bid>> listUserBids(Long userId);
 
-    @Query("WITH aid as (SELECT b.auction_id FROM Bid b WHERE b.user_id = ?1) " +
+    // TODO fix
+    /*@Query("WITH aid as (SELECT b.auction_id FROM Bid b WHERE b.user_id = ?1) " +
             "SELECT min_price, open_bool, id, user_id, winner_bid_id, " +
             "delete_bids_limit_time, description, end_time, photo_id, start_time, title " +
-            "FROM Auction a INNER JOIN aid ON a.id = aid.auctionId")
+            "FROM Auction a INNER JOIN aid ON a.id = aid.auctionId")*/
+    @Query("SELECT b.auction_id FROM Bid b WHERE b.user_id = ?1")
     Optional<List<Auction>> listAuctionsWithUserBids(Long userId);
 
 }

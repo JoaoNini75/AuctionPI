@@ -40,4 +40,11 @@ public class ErrorMessages {
             "auction, as the owner defined that the limit was until %s";
     public static final String AUCTION_NOT_EXISTS = "The auction with the given id (%s) does not exist.";
     public static final String SAME_USER_BIDDING = "You cannot make a bid for your own auctions.";
+
+    // QuestionService
+    public static final String QUESTION_NOT_EXISTS = "The question with the id %s does not exist.";
+    public static final String QUESTION_CANNOT_BE_EMPTY = "The question can not be an empty text.";
+    public static final String SAME_USER_ASKING_QUESTION = "You can not ask a question in an auction" +
+            " created by you.";
+
 }
