@@ -2,7 +2,7 @@ An auction Rest API built with Spring Boot, Java 17 and PostgreSQL.
 
 Based on my college (FCT - UNL) Cloud Computing Systems course (project 1 - 2022/23 edition). 
 
-The API has (or will have) the following entities: 
+The API is based on the following entities: 
 - Users
 - Media
 - Auctions
@@ -17,3 +17,11 @@ Besides the CRUD operations for all of the entities, the service provides endpoi
 - List of auctions that a given user created;
 - List of auctions that a given user bid on;
 - List of questions of a given auction.
+
+
+Other important features/implementation details (will) include:
+- Use of the scheduling features of Spring Boot to make an auction close;
+- Security with tokens;
+- A recommendation system;
+- Unit tests;
+- Documentation.
