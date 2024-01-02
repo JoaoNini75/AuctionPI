@@ -2,6 +2,8 @@ package com.joaonini75.auctionpi.auctions;
 
 import com.joaonini75.auctionpi.bids.Bid;
 import com.joaonini75.auctionpi.bids.BidRepository;
+import com.joaonini75.auctionpi.questions.Question;
+import com.joaonini75.auctionpi.questions.QuestionRepository;
 import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,14 @@ public class AuctionService {
     private final UserRepository users;
     private final AuctionRepository auctions;
     private final BidRepository bids;
+    private final QuestionRepository questions;
 
     @Autowired
-    public AuctionService(UserRepository users, AuctionRepository auctions, BidRepository bids) {
+    public AuctionService(UserRepository users, AuctionRepository auctions, BidRepository bids, QuestionRepository questions) {
         this.users = users;
         this.auctions = auctions;
         this.bids = bids;
+        this.questions = questions;
     }
 
     public Auction getAuction(Long id) {
@@ -108,6 +112,12 @@ public class AuctionService {
                 nowLocalDateTimeToString(),
                 limitDate());
         return closingAuctions.orElse(null);
+    }
+
+    public List<Question> listAuctionQuestions(Long id) {
+        auctionExists(auctions, id);
+        Optional<List<Question>> auctionBids = questions.listAuctionQuestions(id);
+        return auctionBids.orElse(null);
     }
 
 

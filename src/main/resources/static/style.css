@@ -1,0 +1,20 @@
+body {
+    color: #eeeeeef1;
+    background-color: #161616;
+    margin-left: 2%;
+    margin-top: 3%;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+li {
+    color: #74d9f8f1;
+    margin-top: 0.7%;
+}
+
+a {
+    color: #74d9f8f1;
+    font-size: 19px;
+}

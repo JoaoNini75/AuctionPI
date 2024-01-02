@@ -6,6 +6,8 @@ import com.joaonini75.auctionpi.bids.Bid;
 import com.joaonini75.auctionpi.bids.BidService;
 import com.joaonini75.auctionpi.media.Blob;
 import com.joaonini75.auctionpi.media.MediaRepository;
+import com.joaonini75.auctionpi.questions.Question;
+import com.joaonini75.auctionpi.questions.QuestionService;
 import com.joaonini75.auctionpi.users.User;
 import com.joaonini75.auctionpi.users.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,8 +24,9 @@ import static java.time.Month.*;
 public class AppConfig {
 
     @Bean
-    CommandLineRunner userConfig(UserRepository users, MediaRepository media,
-                                 AuctionService auctionService, BidService bidService) {
+    CommandLineRunner commandLineRunner(UserRepository users, MediaRepository media,
+                                 AuctionService auctionService, BidService bidService,
+                                 QuestionService  questionService) {
         return args -> {
             User john = new User("John Hell", "johnhell",
                     "john.hell@gmail.com", "password1", "photoId1",
@@ -78,6 +81,37 @@ public class AppConfig {
             bidService.createBid(bid4);
             bidService.createBid(bid5);
             bidService.createBid(bid6);
+
+
+            Question question1 = new Question(1L, 2L,
+                    "What is the weight of this graphics card?",
+                    null, null, null);
+
+            Question question2 = new Question(2L, 3L,
+                    "What is the diameter of this football?",
+                    null, null, null);
+
+            Question question3 = new Question(3L, 1L,
+                    "How many horsepower does this car have?",
+                    null, null, null);
+
+            questionService.createQuestion(question1);
+            questionService.createQuestion(question2);
+            questionService.createQuestion(question3);
+
+            Question answer1 = new Question(1L, null, null, null,
+                    "It weighs around 500 grams.", null, null);
+
+            Question answer2 = new Question(2L, null, null, null,
+                    "The diameter is 25 centimeters.", null, null);
+
+            Question answer3 = new Question(3L, null, null, null,
+                    "I'm not sure. Last time I put it on a dyno test was 3 years ago and" +
+                            " it reached 260HP.", null, null);
+
+            questionService.answerQuestion(answer1);
+            questionService.answerQuestion(answer2);
+            questionService.answerQuestion(answer3);
         };
     }
 }

@@ -22,7 +22,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
             "SELECT min_price, open_bool, id, user_id, winner_bid_id, " +
             "delete_bids_limit_time, description, end_time, photo_id, start_time, title " +
             "FROM Auction a INNER JOIN aid ON a.id = aid.auctionId")*/
-    @Query("SELECT b.auction_id FROM Bid b WHERE b.user_id = ?1")
+    @Query("SELECT a FROM Auction a")
     Optional<List<Auction>> listAuctionsWithUserBids(Long userId);
 
 }

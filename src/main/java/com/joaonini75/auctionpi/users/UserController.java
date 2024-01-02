@@ -18,11 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public List<User> listUsers() {
-        return userService.listUsers();
-    }
-
     @GetMapping(path = "{id}")
     public User getUser(@PathVariable("id") Long id) {
         return userService.getUser(id);
@@ -41,6 +36,11 @@ public class UserController {
     @PutMapping
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
+    }
+
+    @GetMapping
+    public List<User> listUsers() {
+        return userService.listUsers();
     }
 
     // List of bids of a given user

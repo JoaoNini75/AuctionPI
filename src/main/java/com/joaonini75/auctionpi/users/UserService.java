@@ -56,12 +56,8 @@ public class UserService {
     @Transactional
     public User updateUser(User newUser) {
         User oldUser = userExists(users, newUser.getId());
-
-        User finalUser = processUpdates(oldUser,
-                newUser.getName(), newUser.getEmail());
-
-        users.save(finalUser);
-        return finalUser;
+        User finalUser = processUpdates(oldUser, newUser.getName(), newUser.getEmail());
+        return users.save(finalUser);
     }
 
     @Transactional

@@ -2,14 +2,13 @@ package com.joaonini75.auctionpi.questions;
 
 import com.joaonini75.auctionpi.auctions.Auction;
 import com.joaonini75.auctionpi.auctions.AuctionRepository;
-import com.joaonini75.auctionpi.users.User;
+import com.joaonini75.auctionpi.bids.Bid;
 import com.joaonini75.auctionpi.users.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.joaonini75.auctionpi.auctions.AuctionService.auctionExists;
@@ -56,11 +55,19 @@ public class QuestionService {
 
     @Transactional
     public Question answerQuestion(Question question) {
-        return null; //TODO
-    }
+        Question oldQuestion = questionExists(questions, question.getId());
 
-    public List<Question> listAuctionQuestions(Long id) {
-        return null; //TODO
+        // TODO: guarantee that the user who answers the question is the
+        //  owner of the auction. Need authentication for this.
+
+        String answerText = question.getAnswerText();
+        if (answerText == null || answerText.trim().equals(""))
+            throw new IllegalStateException(ANSWER_CANNOT_BE_EMPTY);
+
+        oldQuestion.setAnswerText(answerText);
+        oldQuestion.setAnsweredTime(nowLocalDateTimeToString());
+
+        return questions.save(oldQuestion);
     }
 
 

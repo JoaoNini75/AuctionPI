@@ -13,12 +13,10 @@ import java.util.List;
 public class AuctionController {
 
     private final AuctionService auctionService;
-    private final QuestionService questionService;
 
     @Autowired
-    public AuctionController(AuctionService auctionService, QuestionService questionService) {
+    public AuctionController(AuctionService auctionService) {
         this.auctionService = auctionService;
-        this.questionService = questionService;
     }
 
     @GetMapping(path = "{id}")
@@ -51,6 +49,6 @@ public class AuctionController {
     // List of questions of a given auction
     @GetMapping(path = "{id}/questions")
     public List<Question> listAuctionQuestions(@PathVariable("id") Long id) {
-        return questionService.listAuctionQuestions(id);
+        return auctionService.listAuctionQuestions(id);
     }
 }

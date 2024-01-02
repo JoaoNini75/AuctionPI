@@ -46,5 +46,6 @@ public class ErrorMessages {
     public static final String QUESTION_CANNOT_BE_EMPTY = "The question can not be an empty text.";
     public static final String SAME_USER_ASKING_QUESTION = "You can not ask a question in an auction" +
             " created by you.";
+    public static final String ANSWER_CANNOT_BE_EMPTY = "The answer to a question can not be an empty text.";
 
 }
