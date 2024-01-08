@@ -4,6 +4,7 @@ import com.joaonini75.auctionpi.auctions.Auction;
 import com.joaonini75.auctionpi.auctions.AuctionRepository;
 import com.joaonini75.auctionpi.bids.Bid;
 import com.joaonini75.auctionpi.bids.BidRepository;
+import com.joaonini75.auctionpi.utils.EmailService;
 import com.joaonini75.auctionpi.utils.Hash;
 import static com.joaonini75.auctionpi.utils.ErrorMessages.*;
 
@@ -45,6 +46,10 @@ public class UserService {
             throw new IllegalStateException(INVALID_PASSWORD);
 
         user.setPassword(Hash.of(user.getPassword()));
+
+        EmailService es = new EmailService();
+        es.sendSimpleMail("nini7500@gmail.com", "Hello from AuctionPI!",
+                "AuctionPI", null);
 
         return users.save(user);
     }
