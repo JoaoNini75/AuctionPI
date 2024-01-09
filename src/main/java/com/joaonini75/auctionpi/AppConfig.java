@@ -118,9 +118,9 @@ public class AppConfig {
             questionService.answerQuestion(answer2);
             questionService.answerQuestion(answer3);
 
-            EmailService emailService = new EmailService();
-            emailService.sendSimpleMail("nini7500@gmail.com",
-                    "Hello from AuctionPI!", "AuctionPI", null);
+            /* EmailService emailService = new EmailService();
+            emailService.sendSimpleMail("",
+                    "Hello from AuctionPI!", "AuctionPI");*/
         };
     }
 }

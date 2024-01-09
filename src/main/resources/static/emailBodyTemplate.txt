@@ -1,0 +1,6 @@
+<h2>Hello %,</h2><br/>
+<p>To validate your AuctionPI account, just click the following link:</p>
+<a href="http://127.0.0.1:5500/webapp">Validate account</a>
+<br/><br/>
+<p>Best regards,</p>
+<p>The AuctionPI team</p>

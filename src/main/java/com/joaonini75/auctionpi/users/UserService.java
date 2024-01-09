@@ -12,8 +12,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class UserService {
@@ -39,7 +44,7 @@ public class UserService {
 
     public String sendEmail() {
         return new EmailService().sendSimpleMail("nini7500@gmail.com",
-                "Hello from AuctionPI!", "AuctionPI", null);
+                "Hello from AuctionPI!", "Welcome to AuctionPI");
     }
 
     @Transactional
@@ -53,9 +58,38 @@ public class UserService {
         user.setPassword(Hash.of(user.getPassword()));
 
         // send account confirmation email
-
+        String msgBody = getMsgBodyFile(user.getName());
+        if (!msgBody.equals(""))
+            new EmailService().sendHTMLMail(user.getEmail(),
+                    msgBody, "Welcome to AuctionPI");
 
         return users.save(user);
+    }
+
+    private String getMsgBodyFile(String userName) {
+        File file = new File(
+                "src/main/resources/static/emailBodyTemplate.txt");
+        String msgBody = "";
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
+
+        while (scanner.hasNextLine())
+            msgBody += scanner.nextLine();
+        scanner.close();
+
+        System.out.println("\n\n\nMSGBODY: " + msgBody);
+        String[] msgParts = msgBody.split("%");
+
+        for (int i = 0; i < msgParts.length; i++)
+            System.out.println(msgParts[i]);
+        System.out.println("\n\n");
+        return msgParts[0] + userName + msgParts[1];
     }
 
     private boolean isPasswordValid(String password) {
