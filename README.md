@@ -23,6 +23,8 @@ Besides the CRUD operations for all of the entities, the service provides endpoi
 
 Other important features/implementation details (will) include:
 - Use of the scheduling features of Spring Boot to make an auction close;
+- Account validation through an email link;
+- A simple web interface;
 - Security with tokens;
 - A recommendation system;
 - Unit tests;
