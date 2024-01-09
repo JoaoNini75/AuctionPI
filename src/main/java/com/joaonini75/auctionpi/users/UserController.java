@@ -18,6 +18,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping(path = "email")
+    public String sendEmail() {
+        return userService.sendEmail();
+    }
+
     @GetMapping(path = "{id}")
     public User getUser(@PathVariable("id") Long id) {
         return userService.getUser(id);

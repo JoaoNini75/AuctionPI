@@ -37,6 +37,11 @@ public class UserService {
         return userExists(users, id);
     }
 
+    public String sendEmail() {
+        return new EmailService().sendSimpleMail("nini7500@gmail.com",
+                "Hello from AuctionPI!", "AuctionPI", null);
+    }
+
     @Transactional
     public User createUser(User user) {
         if (!isEmailValid(user.getEmail()))
@@ -47,9 +52,8 @@ public class UserService {
 
         user.setPassword(Hash.of(user.getPassword()));
 
-        EmailService es = new EmailService();
-        es.sendSimpleMail("nini7500@gmail.com", "Hello from AuctionPI!",
-                "AuctionPI", null);
+        // send account confirmation email
+
 
         return users.save(user);
     }

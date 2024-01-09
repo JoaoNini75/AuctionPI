@@ -10,14 +10,18 @@ import com.joaonini75.auctionpi.questions.Question;
 import com.joaonini75.auctionpi.questions.QuestionService;
 import com.joaonini75.auctionpi.users.User;
 import com.joaonini75.auctionpi.users.UserRepository;
+import com.joaonini75.auctionpi.utils.EmailService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.joaonini75.auctionpi.bids.BidService.DATE_TIME_PATTERN;
 import static java.time.Month.*;
 
 @Configuration
@@ -47,9 +51,10 @@ public class AppConfig {
             media.write(blob1);
             media.write(blob2);
 
-
-            String endDate = "2024-01-05_16:00:00";
-            String deleteBidsLimitTime = "2024-01-05_15:59:00";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+            LocalDateTime date = LocalDateTime.now().plusDays(5L);
+            String endDate = date.format(formatter);
+            String deleteBidsLimitTime = date.minusMinutes(1L).format(formatter);
 
             Auction auction1 = new Auction(1L, "Auction 1 title", "Auction 1 description",
                     null, 2.0f, "", endDate,
@@ -112,6 +117,10 @@ public class AppConfig {
             questionService.answerQuestion(answer1);
             questionService.answerQuestion(answer2);
             questionService.answerQuestion(answer3);
+
+            EmailService emailService = new EmailService();
+            emailService.sendSimpleMail("nini7500@gmail.com",
+                    "Hello from AuctionPI!", "AuctionPI", null);
         };
     }
 }
